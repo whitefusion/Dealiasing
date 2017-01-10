@@ -1,4 +1,5 @@
-![](images/flow.png ?raw=true)
+![](/images/flow.png)
+
 # Dealiasing
 This is an indepedent project that uses a sequence of undersampled CT images with subpixel movement to reconstruct a higher resolution image. This process removes the aliasing effects in the undersampled images.
 The algorithm applied here are sub-pixle registration and gradient descent optimization.
@@ -16,4 +17,4 @@ The CT image of stripes used in this study is in the courtesy of the Johns Hopki
 * This algorithm only work for undersampled data sequence with horizontal subpixel movement.
 
 # Reference
-_ Hardie, R. C., K. J. Barnard, and E. E. Armstrong. “Joint MAP Registration and High-Resolution Image Estimation Using a Sequence of Undersampled Images.” IEEE Transactions on Image Processing 6.12 (1997): 1621–1633. Web. 13 May 2016. _
+Hardie, R. C., K. J. Barnard, and E. E. Armstrong. “Joint MAP Registration and High-Resolution Image Estimation Using a Sequence of Undersampled Images.” IEEE Transactions on Image Processing 6.12 (1997): 1621–1633. Web. 13 May 2016.
