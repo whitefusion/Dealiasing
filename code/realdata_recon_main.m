@@ -1,4 +1,3 @@
-% realdata test
 clear 
 close all
 clc 
@@ -62,13 +61,8 @@ for j = 1 : size(x1,1)
 end
 %z0(:,1:(period)) = [];
 z0(:,end-(period-1):end) = [];
-% kernel for the second term in optimization function
-kernel = zeros(5); 
-kernel(1,3) = 1/16;kernel(2,2) = 1/8; kernel(2,3) =-1/2; kernel(2,4) = 1/8;
-kernel(3,1) = 1/16;kernel(3,2) = -1/2;kernel(3,3) = 5/4; kernel(3,4) = -1/2;kernel(3,5) = 1/16;
-kernel(4,2) = 1/8 ;kernel(4,3) = -1/2;kernel(4,4) = 1/8; kernel(5,3) = 1/16;
 
-%% do reconstruction row by row as each row is individual
+%% do reconstruction row by row as 
 for p = 1 : size(line_data,1)
     x1 = z0(p,:);
     y1_move = squeeze(line_data(p,:,:));
@@ -83,85 +77,3 @@ end
 z0 = z0*2;
 z0 = z0(:,3:end-5);
 figure;imagesc(z0);colormap gray;axis image
-
-%% do reconstruction row by row as an entity
-var_eta = mean(mean(var(double(proj_off),0,3)));
-lambda = 10;
-iter = 100;
-hFig = figure();
-for i = 1 : iter
-    for p = 1 : size(line_data,1)
-        x1 = z0(p,:);
-        y1_move = squeeze(line_data(p,:,:));
-        y1_move = y1_move';
-        y1_move = y1_move(2:end,:);
-        y1_move = padarray(y1_move,[0 1],'both');
-        x1 = padarray(x1,[0 2],'both');
-
-        [y1_temp,r_temp] = reconRow_real(x1,y1_move,1/period,s_set,var_eta,lambda,kernel);
-        z0(p,:) = y1_temp;
-    end
-    figure(hFig);
-    imagesc(z0);colormap gray; axis off; axis image
-    title(['iter = ', num2str(i)]);
-end
-
-%% test sample real,just one row
-
-close all;
-clc;
-row= 3;
-x1 = z0(row,:);
-
-y1_move = squeeze(line_data(row,:,:));
-y1_move = y1_move';
-y1_move = y1_move(2:end,:);
-y1_move = padarray(y1_move,[0 1],'both');
-x1 = padarray(x1,[0 2],'both');
-figure;imagesc(x1);colormap gray; axis image
-figure;imagesc(y1_move);colormap gray; axis image
-
-[y1_temp,r_temp] = reconRow(x1,y1_move,1/period,s_set);
-
-row= 100;
-x1 = z0(row,:);
-
-y1_move = squeeze(line_data(row,:,:));
-y1_move = y1_move';
-y1_move = y1_move(2:end,:);
-figure;imagesc(x1);colormap gray; axis image
-figure;imagesc(y1_move);colormap gray; axis image
-
-[y1_temp,r_temp] = reconRow(x1,y1_move,1/period,s_set);
-%% test toy
-close all;
-clc;
-
-a = y1_temp;
-imagesc(a);colormap gray;axis image;
-
-k = 1/2;
-
-nstep = size(s_set,2);
-Ws = [];
-w = 1;
-downset = zeros(int8(nstep),size(a,2)*k);
-upset = zeros(int8(nstep),size(a,2));
-resultconv = zeros(int8(nstep),15);
-for j = 1:size(s_set,2)
-    % multiplication
-    [downsample,coeff,~] = matrix_mult(a,s_set(j),k);
-    shift = fix(s_set(j)/k);
-    downsample = downsample/2;
-    downset(w,:) = downsample;
-    w= w+1;
-end
-downset = downset * 2;
-a0 = [zeros(size(a,2)/2,1);ones(size(a,2)/2,1)];
-a0 = a0';
-
-a0 = padarray(a0,[0 2],'both');
-downset = padarray(downset,[0 1],'both');
-figure;imagesc(downset);colormap gray;axis image;
-figure;imagesc(a0);colormap gray;axis off;axis image;
-[y1_recon,~] = reconRow(a0,downset*2,k,s_set);
