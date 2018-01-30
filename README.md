@@ -1,7 +1,6 @@
 ![](/images/flow.png)
 # Dealiasing
 This is an indepedent project that uses a sequence of undersampled CT images with subpixel movement to reconstruct a higher resolution image. This process removes the aliasing effects in the undersampled images.
-The algorithm implemented here are sub-pixle registration and gradient descent optimization.
 You can refer my report_dealiasing.pdf for more detail.
 
 ## Installation and Usage
